@@ -1,0 +1,18 @@
+services:
+  #api:
+  #  container_name: api_go
+  #  build: .
+  #  ports:
+  #    - 8080:8080
+  #mongodb:
+  #  image: mongo
+  #  container_name: mongodb
+  #  environment:
+  #    - MONGO_INITDB_ROOT_USERNAME=americanas
+  #    - MONGO_INITDB_ROOT_PASSWORD=americanas
+  #  ports:
+  #    - 27017:27017
+  redis:
+    image: redis:7
+    ports:
+      - 6379:6379

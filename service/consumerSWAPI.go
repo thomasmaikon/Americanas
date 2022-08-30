@@ -9,7 +9,7 @@ import (
 
 const startUrl = "https://swapi.dev/api/planets/"
 
-var respositoryDB = FactoryDB{}.GetRedisDB()
+var respositoryDB = factory.GetRedisDB()
 
 func getData(url string) model.Swapi {
 	resp, _ := http.Get(url)

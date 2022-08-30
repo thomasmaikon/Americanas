@@ -53,12 +53,12 @@ func TestMain(m *testing.M) {
 }
 
 func TestAddData(t *testing.T) {
-	test := model.PLanet{Name: "exemplo"}
+	test := model.Planet{Name: "exemplo"}
 	data, _ := json.Marshal(test)
 	db.Set(ctx, "exemplo", data, 2*time.Hour)
 
 	value, _ := db.Get(ctx, "exemplo").Result()
-	var newData model.PLanet
+	var newData model.Planet
 	json.Unmarshal([]byte(value), &newData)
 
 	if reflect.DeepEqual(newData, test) == false {
@@ -67,12 +67,12 @@ func TestAddData(t *testing.T) {
 }
 
 func TestRemoveData(t *testing.T) {
-	test := model.PLanet{Name: "exemplo"}
+	test := model.Planet{Name: "exemplo"}
 	data, _ := json.Marshal(test)
 	db.Set(ctx, "exemplo", data, 2*time.Hour)
 
 	value, _ := db.Get(ctx, "exemplo").Result()
-	var newData model.PLanet
+	var newData model.Planet
 	json.Unmarshal([]byte(value), &newData)
 
 	if reflect.DeepEqual(newData, test) == false {

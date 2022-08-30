@@ -6,6 +6,15 @@ import (
 	"projeto/Americanas/utils"
 )
 
-func GetRedisDB() db.GenericDB {
-	return &db.Redis{Conexao: utils.RedisConnection(), Ctx: context.Background()}
+type FactoryDB struct {
+}
+
+func (f FactoryDB) GetRedisDB() db.GenericDB {
+	return &db.Redis{Connection: utils.RedisConnection(), Ctx: context.Background()}
+}
+
+func (f FactoryDB) GetMongoDB() db.GenericDB {
+	connection := utils.GetConnectMongoDB()
+	collection := connection.Database("americanas").Collection("planets")
+	return &db.Mongo{Collection: collection, Ctx: context.TODO()}
 }

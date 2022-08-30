@@ -11,7 +11,8 @@ import (
 var uri = "mongodb://americanas:americanas@sample.localhost:27017"
 
 func GetConnectMongoDB() *mongo.Client {
-	client, err := mongo.Connect(context.TODO(), options.Client().ApplyURI(uri))
+	clientOptions := options.Client().ApplyURI(uri)
+	client, err := mongo.Connect(context.TODO(), clientOptions)
 
 	if err != nil {
 		panic(err)

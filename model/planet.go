@@ -1,8 +1,9 @@
 package model
 
 type PLanet struct {
-	Name    string   `json: "name"`
-	Climate string   `json: "climate"`
-	Terrain string   `json: "terrain"`
-	Films   []string `json: "films[]"`
+	Id      int32
+	Name    string   `json: "name" bson:"name"`
+	Climate string   `json: "climate" bson: "climate"`
+	Terrain string   `json: "terrain" bson: "terrain"`
+	Films   []string `json: "films[]" bson: "films, omitempty"`
 }

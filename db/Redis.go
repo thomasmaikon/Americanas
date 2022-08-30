@@ -13,7 +13,7 @@ type Redis struct {
 	Ctx        context.Context
 }
 
-func (r *Redis) Add(newPlanet model.PLanet) bool {
+func (r *Redis) Add(newPlanet model.Planet) bool {
 
 	data, _ := json.Marshal(newPlanet)
 	err := r.Connection.Set(r.Ctx, newPlanet.Name, data, 0).Err()
@@ -25,22 +25,22 @@ func (r *Redis) Add(newPlanet model.PLanet) bool {
 	return true
 }
 
-func (r *Redis) FindAll() []model.PLanet {
-	return []model.PLanet{}
+func (r *Redis) FindAll() []model.Planet {
+	return []model.Planet{}
 }
 
-func (r *Redis) FindByName(name string) model.PLanet {
+func (r *Redis) FindByName(name string) model.Planet {
 	value, err := r.Connection.Get(r.Ctx, name).Result()
 	if err != nil {
-		panic(err)
+		return model.Planet{}
 	}
-	var planet model.PLanet
+	var planet model.Planet
 	json.Unmarshal([]byte(value), &planet)
 	return planet
 }
 
-func (r *Redis) FindById(id int64) model.PLanet {
-	return model.PLanet{}
+func (r *Redis) FindById(id string) model.Planet {
+	return model.Planet{}
 }
 
 func (r *Redis) RemoveByName(name string) bool {

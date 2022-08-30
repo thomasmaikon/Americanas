@@ -33,6 +33,13 @@ func (app *Application) Start(port string) *Application {
 
 func main() {
 	//utils.GetConnectMongoDB()
-
-	NewApp().DefineRoutes().Start("8080")
+	route := gin.Default()
+	controllers := route.Group("/api")
+	{
+		controllers.GET("/list", controller.ListPlanets)
+		controllers.POST("/create", controller.CreatePlanet)
+		controllers.DELETE("/remove", controller.RemovePlanet)
+	}
+	route.Run(":8080")
+	//NewApp().DefineRoutes().Start("8080")
 }

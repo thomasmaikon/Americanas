@@ -8,7 +8,7 @@ type ServicePlanet struct {
 }
 
 func (s ServicePlanet) CreateNewPlanet(newPLanet model.PLanet) bool {
-	return repository.Create(newPLanet)
+	return repository.Add(newPLanet)
 }
 
 func (s ServicePlanet) Find(name string, id int64) []model.PLanet {

@@ -1,37 +1,42 @@
 package db
 
 import (
+	"context"
+	"encoding/json"
 	"projeto/Americanas/model"
 
 	"github.com/go-redis/redis/v9"
 )
 
-var generic map[string]*model.PLanet = make(map[string]*model.PLanet)
-
 type Redis struct {
 	Conexao *redis.Client
+	Ctx     context.Context
 }
 
-func (r *Redis) Create(newPlanet model.PLanet) bool {
+func (r *Redis) Add(newPlanet model.PLanet) bool {
 
-	if generic[newPlanet.Name] == nil {
-		generic[newPlanet.Name] = &newPlanet
-		return true
+	data, _ := json.Marshal(newPlanet)
+	err := r.Conexao.Set(r.Ctx, newPlanet.Name, data, 0).Err()
+
+	if err != nil {
+		panic(err)
 	}
 
-	return false
+	return true
 }
 
 func (r *Redis) FindAll() []model.PLanet {
-	list := []model.PLanet{}
-	for _, planet := range generic {
-		list = append(list, *planet)
-	}
-	return list
+	return []model.PLanet{}
 }
 
 func (r *Redis) FindByName(name string) model.PLanet {
-	return *generic[name]
+	value, err := r.Conexao.Get(r.Ctx, name).Result()
+	if err != nil {
+		panic(err)
+	}
+	var planet model.PLanet
+	json.Unmarshal([]byte(value), &planet)
+	return planet
 }
 
 func (r *Redis) FindById(id int64) model.PLanet {
@@ -39,17 +44,9 @@ func (r *Redis) FindById(id int64) model.PLanet {
 }
 
 func (r *Redis) RemoveAll() {
-	for k := range generic {
-		delete(generic, k)
-	}
+
 }
 
 func (r *Redis) RemoveByName(name string) bool {
-	alredyExist := generic[name]
-
-	if alredyExist != nil {
-		alredyExist = nil
-		return true
-	}
 	return false
 }

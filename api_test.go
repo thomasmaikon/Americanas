@@ -7,6 +7,8 @@ import (
 	"github.com/steinfletcher/apitest"
 )
 
+// necessario colocar o dockerTest para nao considerar o banco local no momento de executar
+
 func Test_ListPLanets(t *testing.T) {
 	apitest.New("List planets").Handler(NewApp().DefineRoutes().Route).Get("/api/list").Expect(t).Body(`{"Info":[]}`).Status(http.StatusOK).End()
 }
@@ -33,7 +35,7 @@ func Test_DeletePlanet(t *testing.T) {
 func Test_DeletePlanetWithErrorName(t *testing.T) {
 	app := NewApp().DefineRoutes()
 	apitest.New("Create Planet").Handler(app.Route).Post("/api/create").JSON(`{
-		"name": "Teste",
+		"name": "Teste10",
 		"climate": "arid",
 		"terrain": "desert"
 		}`).Expect(t).End()
@@ -44,7 +46,7 @@ func Test_DeletePlanetWithErrorName(t *testing.T) {
 func Test_ListCreatedPlanet(t *testing.T) {
 	app := NewApp().DefineRoutes()
 	apitest.New("Create Planet").Handler(app.Route).Post("/api/create").JSON(`{
-		"name": "Teste",
+		"name": "Teste60",
 		"climate": "arid",
 		"terrain": "desert"
 	}`).Expect(t).End()

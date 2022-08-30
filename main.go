@@ -26,13 +26,13 @@ func (app *Application) DefineRoutes() *Application {
 }
 
 func (app *Application) Start(port string) *Application {
-	service.SyncSwapi()
 	app.Route.Run(":" + port)
 	return app
 }
 
 func main() {
 	//utils.GetConnectMongoDB()
+	service.SyncSwapi()
 	route := gin.Default()
 	controllers := route.Group("/api")
 	{

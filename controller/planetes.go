@@ -3,7 +3,6 @@ package controller
 import (
 	"projeto/Americanas/model"
 	"projeto/Americanas/service"
-	"strconv"
 
 	"github.com/gin-gonic/gin"
 )
@@ -11,7 +10,7 @@ import (
 var servicePlanet = service.ServicePlanet{}
 
 func CreatePlanet(c *gin.Context) {
-	var planet model.PLanet
+	var planet model.Planet
 	c.BindJSON(&planet)
 
 	if servicePlanet.CreateNewPlanet(planet) {
@@ -30,10 +29,8 @@ func ListPlanets(c *gin.Context) {
 	findByName := c.Query("name")
 	findById := c.Query("id")
 
-	id, _ := strconv.ParseInt(findById, 10, 64)
-
 	c.JSON(200, gin.H{
-		"Info": servicePlanet.Find(findByName, id),
+		"Info": servicePlanet.Find(findByName, findById),
 	})
 }
 

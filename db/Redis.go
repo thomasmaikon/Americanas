@@ -9,14 +9,14 @@ import (
 )
 
 type Redis struct {
-	Conexao *redis.Client
-	Ctx     context.Context
+	Connection *redis.Client
+	Ctx        context.Context
 }
 
 func (r *Redis) Add(newPlanet model.PLanet) bool {
 
 	data, _ := json.Marshal(newPlanet)
-	err := r.Conexao.Set(r.Ctx, newPlanet.Name, data, 0).Err()
+	err := r.Connection.Set(r.Ctx, newPlanet.Name, data, 0).Err()
 
 	if err != nil {
 		panic(err)
@@ -30,7 +30,7 @@ func (r *Redis) FindAll() []model.PLanet {
 }
 
 func (r *Redis) FindByName(name string) model.PLanet {
-	value, err := r.Conexao.Get(r.Ctx, name).Result()
+	value, err := r.Connection.Get(r.Ctx, name).Result()
 	if err != nil {
 		panic(err)
 	}
@@ -41,10 +41,6 @@ func (r *Redis) FindByName(name string) model.PLanet {
 
 func (r *Redis) FindById(id int64) model.PLanet {
 	return model.PLanet{}
-}
-
-func (r *Redis) RemoveAll() {
-
 }
 
 func (r *Redis) RemoveByName(name string) bool {

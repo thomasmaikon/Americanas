@@ -2,7 +2,7 @@ package service
 
 import "projeto/Americanas/model"
 
-var repository = GetRedisDB()
+var repository = FactoryDB{}.GetMongoDB()
 
 type ServicePlanet struct {
 }

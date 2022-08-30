@@ -7,7 +7,5 @@ type GenericDB interface {
 	FindAll() []model.PLanet
 	FindByName(name string) model.PLanet
 	FindById(id int64) model.PLanet
-	RemoveAll()
 	RemoveByName(name string) bool
-	//RemoveById(id int64)
 }

@@ -10,7 +10,7 @@ import (
 
 const uri = "mongodb://americanas:americanas@sample.localhost:27017"
 
-func GetConnectMongoDB() *mongo.Client {
+func getConnectMongoDB() *mongo.Client {
 	clientOptions := options.Client().ApplyURI(uri)
 	client, err := mongo.Connect(context.TODO(), clientOptions)
 

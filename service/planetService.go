@@ -1,21 +1,21 @@
 package service
 
-import "projeto/Americanas/model"
+import (
+	"projeto/Americanas/db"
+	"projeto/Americanas/model"
+)
 
-var factory = new(FactoryDB)
-
-var repository = factory.GetMongoDB()
-var repositoryRedis = factory.GetRedisDB()
-
-type ServicePlanet struct {
+type servicePlanet struct {
+	Repository      db.GenericDB
+	RepositoryRedis db.GenericDB
 }
 
-func (s ServicePlanet) CreateNewPlanet(newPLanet model.Planet) bool {
-	newPLanet.Films = repositoryRedis.FindByName(newPLanet.Name).Films
-	return repository.Add(newPLanet)
+func (s servicePlanet) CreateNewPlanet(newPLanet model.Planet) bool {
+	newPLanet.Films = s.RepositoryRedis.FindByName(newPLanet.Name).Films
+	return s.Repository.Add(newPLanet)
 }
 
-func (s ServicePlanet) Find(name string, id string) []model.Planet {
+func (s servicePlanet) Find(name string, id string) []model.Planet {
 	result := []model.Planet{}
 	if name != "" {
 		return append(result, s.findByName(name))
@@ -26,18 +26,18 @@ func (s ServicePlanet) Find(name string, id string) []model.Planet {
 	return s.findAll()
 }
 
-func (s ServicePlanet) findByName(name string) model.Planet {
-	return repository.FindByName(name)
+func (s servicePlanet) findByName(name string) model.Planet {
+	return s.Repository.FindByName(name)
 }
 
-func (s ServicePlanet) findAll() []model.Planet {
-	return repository.FindAll()
+func (s servicePlanet) findAll() []model.Planet {
+	return s.Repository.FindAll()
 }
 
-func (s ServicePlanet) findById(id string) model.Planet {
-	return repository.FindById(id)
+func (s servicePlanet) findById(id string) model.Planet {
+	return s.Repository.FindById(id)
 }
 
-func (s ServicePlanet) RemoveByName(name string) bool {
-	return repository.RemoveByName(name)
+func (s servicePlanet) RemoveByName(name string) bool {
+	return s.Repository.RemoveByName(name)
 }

@@ -7,7 +7,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-var servicePlanet = service.ServicePlanet{}
+var servicePlanet = service.GetServicePlanet()
 
 func CreatePlanet(c *gin.Context) {
 	var planet model.Planet

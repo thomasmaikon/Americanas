@@ -5,11 +5,12 @@ import (
 	"io/ioutil"
 	"net/http"
 	"projeto/Americanas/model"
+	"projeto/Americanas/utils"
 )
 
 const startUrl = "https://swapi.dev/api/planets/"
 
-var respositoryDB = factory.GetRedisDB()
+var respositoryDB = utils.GetFactoryDB().GetRedisDB()
 
 func getData(url string) model.Swapi {
 	resp, _ := http.Get(url)
@@ -24,6 +25,8 @@ func addPlanets(swapi model.Swapi) {
 		respositoryDB.Add(planet)
 	}
 }
+
+// colocar gatilho para executar e atualizar os dados, talvez a api atualize
 func SyncSwapi() {
 	initialURL := startUrl
 	for {

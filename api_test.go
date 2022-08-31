@@ -24,12 +24,12 @@ func Test_CreatePlanet(t *testing.T) {
 func Test_DeletePlanet(t *testing.T) {
 	app := NewApp().DefineRoutes()
 	apitest.New("Create Planet").Handler(app.Route).Post("/api/create").JSON(`{
-		"name": "Teste",
+		"name": "TesteDelete",
 		"climate": "arid",
 		"terrain": "desert"
-		}`).Expect(t).End()
+		}`).Expect(t).Status(http.StatusCreated).End()
 
-	apitest.New("Delete Planet").Handler(app.Route).Delete("/api/remove").QueryParams(map[string]string{"name": "Teste"}).Expect(t).Body(`{"Removed":true}`).Status(http.StatusOK).End()
+	apitest.New("Delete Planet").Handler(app.Route).Delete("/api/remove").QueryParams(map[string]string{"name": "TesteDelete"}).Expect(t).Body(`{"Removed":true}`).Status(http.StatusOK).End()
 }
 
 func Test_DeletePlanetWithErrorName(t *testing.T) {
@@ -38,26 +38,46 @@ func Test_DeletePlanetWithErrorName(t *testing.T) {
 		"name": "Teste10",
 		"climate": "arid",
 		"terrain": "desert"
-		}`).Expect(t).End()
+		}`).Expect(t).Status(http.StatusCreated).End()
 
 	apitest.New("Delete Planet").Handler(app.Route).Delete("/api/remove").QueryParams(map[string]string{"name": "ErrorName"}).Expect(t).Body(`{"Removed":false}`).Status(http.StatusOK).End()
 }
 
-func Test_ListCreatedPlanet(t *testing.T) {
+func Test_FindPlanet(t *testing.T) {
 	app := NewApp().DefineRoutes()
 	apitest.New("Create Planet").Handler(app.Route).Post("/api/create").JSON(`{
-		"name": "Teste60",
+		"name": "Tatooine",
 		"climate": "arid",
 		"terrain": "desert"
-	}`).Expect(t).End()
+	}`).Expect(t).Status(http.StatusCreated).End()
 
-	apitest.New("List planets").Handler(NewApp().DefineRoutes().Route).Get("/api/list").Expect(t).Body(`{
-		"Info": [
-			{
-				"Name": "Teste",
-				"Climate": "arid",
-				"Terrain": "desert"
-			}
+	apitest.New("Lists planets").Handler(NewApp().DefineRoutes().Route).Get("/api/list/").QueryParams(map[string]string{"name": "Tatooine"}).Expect(t).Body(`{
+		"Id": "630fa686fe2e7f586b09b61c",
+		"Name": "Tatooine",
+		"Climate": "arid",
+		"Terrain": "desert",
+		"Films": [
+			"https://swapi.dev/api/films/1/",
+			"https://swapi.dev/api/films/3/",
+			"https://swapi.dev/api/films/4/",
+			"https://swapi.dev/api/films/5/",
+			"https://swapi.dev/api/films/6/"
 		]
 	}`).Status(http.StatusOK).End()
+}
+
+func Test_CreatePlanetAlredyExist(t *testing.T) {
+	app := NewApp().DefineRoutes()
+	apitest.New("Create Planet").Handler(app.Route).Post("/api/create").JSON(`{
+		"name": "Existente1",
+		"climate": "arid",
+		"terrain": "desert"
+	}`).Expect(t).Status(http.StatusCreated).End()
+
+	apitest.New("Create Planet").Handler(app.Route).Post("/api/create").JSON(`{
+		"name": "Existente1",
+		"climate": "arid",
+		"terrain": "desert"
+	}`).Expect(t).Body(`{ "Info": "Planeta ja existente"}`).End()
+
 }

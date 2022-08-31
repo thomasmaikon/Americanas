@@ -92,7 +92,7 @@ func TestFindPlanet(t *testing.T) {
 	var banco db.GenericDB
 	banco = &db.Mongo{Collection: collection, Ctx: ctx}
 
-	newPlanet := model.Planet{Name: "Tatooine", Climate: "arid", Terrain: "desert"}
+	newPlanet := model.Planet{Name: "Test", Climate: "arid", Terrain: "desert"}
 
 	banco.Add(newPlanet)
 	planet := banco.FindByName("Tattoine")
@@ -102,7 +102,7 @@ func TestFindPlanet(t *testing.T) {
 	}
 }
 
-func TestRemovelanet(t *testing.T) {
+func TestRemovePlanet(t *testing.T) {
 	collection := dbClient.Database("americanas").Collection("planets")
 	var banco db.GenericDB
 	banco = &db.Mongo{Collection: collection, Ctx: context.TODO()}
@@ -113,6 +113,6 @@ func TestRemovelanet(t *testing.T) {
 	result := banco.RemoveByName("Tattoine")
 
 	if !result {
-		t.Fatalf("O planeta era para existir")
+		t.Fatalf("O planeta nao era para existir")
 	}
 }

@@ -1,22 +1,21 @@
 package db
 
 import (
-	"context"
 	"encoding/json"
 	"projeto/Americanas/model"
+	"time"
 
-	"github.com/go-redis/redis/v9"
+	"github.com/go-redis/redis"
 )
 
 type Redis struct {
 	Connection *redis.Client
-	Ctx        context.Context
 }
 
 func (r *Redis) Add(newPlanet model.Planet) bool {
 
 	data, _ := json.Marshal(newPlanet)
-	err := r.Connection.Set(r.Ctx, newPlanet.Name, data, 0).Err()
+	err := r.Connection.Set(newPlanet.Name, data, 24*time.Hour).Err()
 
 	if err != nil {
 		panic(err)
@@ -30,7 +29,7 @@ func (r *Redis) FindAll() []model.Planet {
 }
 
 func (r *Redis) FindByName(name string) model.Planet {
-	value, err := r.Connection.Get(r.Ctx, name).Result()
+	value, err := r.Connection.Get(name).Result()
 	if err != nil {
 		return model.Planet{}
 	}

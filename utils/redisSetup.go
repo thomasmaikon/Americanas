@@ -1,8 +1,8 @@
 package utils
 
-import "github.com/go-redis/redis/v9"
+import "github.com/go-redis/redis"
 
-func RedisConnection() *redis.Client {
+func getRedisConnection() *redis.Client {
 	redis := redis.NewClient(&redis.Options{
 		Addr:     "localhost:6379",
 		Password: "",

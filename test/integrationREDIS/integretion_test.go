@@ -1,8 +1,6 @@
 package integrationredis
 
 import (
-	"context"
-	"encoding/json"
 	"fmt"
 	"log"
 	"os"
@@ -11,12 +9,14 @@ import (
 	"testing"
 	"time"
 
-	"github.com/go-redis/redis/v9"
+	"github.com/go-redis/redis"
+
+	dataBase "projeto/Americanas/db"
+
 	"github.com/ory/dockertest"
 )
 
 var db *redis.Client
-var ctx = context.Background()
 
 func TestMain(m *testing.M) {
 
@@ -26,7 +26,7 @@ func TestMain(m *testing.M) {
 		log.Fatalf("Could not connect to docker: %s", err)
 	}
 
-	resource, err := pool.Run("redis", "7", nil)
+	resource, err := pool.Run("redis", "3.2", nil)
 	resource.Expire(30 * uint(time.Minute))
 
 	if err != nil {
@@ -37,7 +37,7 @@ func TestMain(m *testing.M) {
 		db = redis.NewClient(&redis.Options{
 			Addr: fmt.Sprintf("localhost:%s", resource.GetPort("6379/tcp")),
 		})
-		return db.Ping(ctx).Err()
+		return db.Ping().Err()
 	})
 
 	if err != nil {
@@ -52,7 +52,34 @@ func TestMain(m *testing.M) {
 	os.Exit(code)
 }
 
-func TestAddData(t *testing.T) {
+// nao e possivel testar com redis 7
+func TestAddAndFindData(t *testing.T) {
+	var banco dataBase.GenericDB
+	banco = &dataBase.Redis{Connection: db}
+
+	planet := model.Planet{Name: "exemplo"}
+
+	banco.Add(planet)
+	result := banco.FindByName(planet.Name)
+
+	if reflect.DeepEqual(planet, result) == false {
+		t.Fatal("planets are not equals")
+	}
+}
+
+func TestFindDataThatNotExist(t *testing.T) {
+	var banco dataBase.GenericDB
+
+	banco = &dataBase.Redis{Connection: db}
+
+	result := banco.FindByName("NotExist")
+
+	if reflect.DeepEqual(result, model.Planet{}) == false {
+		t.Fatal("Planet are not equals")
+	}
+}
+
+/* func TestRemoveData(t *testing.T) {
 	test := model.Planet{Name: "exemplo"}
 	data, _ := json.Marshal(test)
 	db.Set(ctx, "exemplo", data, 2*time.Hour)
@@ -64,18 +91,4 @@ func TestAddData(t *testing.T) {
 	if reflect.DeepEqual(newData, test) == false {
 		t.Fail()
 	}
-}
-
-func TestRemoveData(t *testing.T) {
-	test := model.Planet{Name: "exemplo"}
-	data, _ := json.Marshal(test)
-	db.Set(ctx, "exemplo", data, 2*time.Hour)
-
-	value, _ := db.Get(ctx, "exemplo").Result()
-	var newData model.Planet
-	json.Unmarshal([]byte(value), &newData)
-
-	if reflect.DeepEqual(newData, test) == false {
-		t.Fail()
-	}
-}
+} */

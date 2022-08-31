@@ -78,17 +78,3 @@ func TestFindDataThatNotExist(t *testing.T) {
 		t.Fatal("Planet are not equals")
 	}
 }
-
-/* func TestRemoveData(t *testing.T) {
-	test := model.Planet{Name: "exemplo"}
-	data, _ := json.Marshal(test)
-	db.Set(ctx, "exemplo", data, 2*time.Hour)
-
-	value, _ := db.Get(ctx, "exemplo").Result()
-	var newData model.Planet
-	json.Unmarshal([]byte(value), &newData)
-
-	if reflect.DeepEqual(newData, test) == false {
-		t.Fail()
-	}
-} */

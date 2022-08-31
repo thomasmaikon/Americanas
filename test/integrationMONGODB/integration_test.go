@@ -7,7 +7,7 @@ import (
 	"os"
 	"projeto/Americanas/db"
 	"projeto/Americanas/model"
-	"reflect"
+	"strings"
 	"testing"
 
 	"github.com/ory/dockertest"
@@ -28,7 +28,6 @@ func TestMain(m *testing.M) {
 
 	resource, err := pool.RunWithOptions(&dockertest.RunOptions{
 		Repository: "mongo",
-		Tag:        "5.0",
 		Env: []string{
 			"MONGO_INITDB_ROOT_USERNAME=americanas",
 			"MONGO_INITDB_ROOT_PASSWORD=americanas",
@@ -91,13 +90,12 @@ func TestFindPlanet(t *testing.T) {
 	collection := dbClient.Database("americanas").Collection("planets")
 	var banco db.GenericDB
 	banco = &db.Mongo{Collection: collection, Ctx: ctx}
-
-	newPlanet := model.Planet{Name: "Test", Climate: "arid", Terrain: "desert"}
-
+	newPlanet := model.Planet{Name: "Test2", Climate: "arid", Terrain: "desert"}
+	//collection.InsertOne(ctx, bson.D{{"name", newPlanet.Name}, {"climate", newPlanet.Climate}, {"terrain", newPlanet.Terrain}, {"films", newPlanet.Films}})
 	banco.Add(newPlanet)
-	planet := banco.FindByName("Tattoine")
+	planet := banco.FindByName("Test2")
 
-	if reflect.DeepEqual(newPlanet, planet) == false {
+	if strings.Compare(newPlanet.Id.String(), planet.Id.String()) == 0 { // significa que o objeto foi salvo e o ID atualizado
 		t.Fatalf("Os objetos eram para ser iguais")
 	}
 }
@@ -105,12 +103,11 @@ func TestFindPlanet(t *testing.T) {
 func TestRemovePlanet(t *testing.T) {
 	collection := dbClient.Database("americanas").Collection("planets")
 	var banco db.GenericDB
-	banco = &db.Mongo{Collection: collection, Ctx: context.TODO()}
-
-	newPlanet := model.Planet{Name: "Tatooine", Climate: "arid", Terrain: "desert"}
+	banco = &db.Mongo{Collection: collection, Ctx: ctx}
+	newPlanet := model.Planet{Name: "Tatooine", Climate: "arid", Terrain: "desert", Films: []string{}}
 
 	banco.Add(newPlanet)
-	result := banco.RemoveByName("Tattoine")
+	result := banco.RemoveByName("Tatooine")
 
 	if !result {
 		t.Fatalf("O planeta nao era para existir")

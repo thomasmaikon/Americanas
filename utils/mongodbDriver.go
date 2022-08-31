@@ -8,7 +8,7 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/readpref"
 )
 
-const uri = "mongodb://americanas:americanas@sample.localhost:27017"
+const uri = "mongodb://americanas:americanas@sample.mongodb:27017"
 
 func getConnectMongoDB() *mongo.Client {
 	clientOptions := options.Client().ApplyURI(uri)
